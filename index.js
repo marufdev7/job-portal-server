@@ -55,7 +55,7 @@ async function run() {
             const newJob = req.body;
             const result = await jobsCollection.insertOne(newJob);
             res.send(result);
-        })
+        });
 
         // Job application APIS
 
@@ -67,7 +67,7 @@ async function run() {
             //not proper and good way.
 
             for (application of result) {
-                console.log(application.job_id);
+                // console.log(application.job_id);
                 const query1 = { _id: new ObjectId(application.job_id) };
                 const job = await jobsCollection.findOne(query1);
                 if (job) {
@@ -79,13 +79,20 @@ async function run() {
             }
 
             res.send(result);
-        })
+        });
+
+        app.get('/job-applications/jobs/:job_id', async (req, res) => {
+            const jobId = req.params.job_id;
+            const query = { job_id: jobId };
+            const result = await jobApplicationCollection.find(query).toArray();
+            res.send(result);
+        });
 
         app.post('/job-applications', async (req, res) => {
             const application = req.body;
             const result = await jobApplicationCollection.insertOne(application);
             res.send(result)
-        })
+        });
 
 
     } finally {
