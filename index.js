@@ -1,9 +1,10 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-require('dotenv').config();
+const jwt = require('jsonwebtoken');
 const app = express();
 const port = process.env.PORT || 3000;
+require('dotenv').config();
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 //middleware
 app.use(cors());
@@ -31,6 +32,13 @@ async function run() {
         //jobs related APIS
         const jobsCollection = client.db('jobPortal').collection('jobs');
         const jobApplicationCollection = client.db('jobPortal').collection('job_application');
+
+        // Auth related APIs
+        app.get('jwt', async (req, res) => {
+            const user = req.body;
+            const token = jwt.sign(user, 'secret', { expiresIn: '2h' });
+            res.send(token);
+        })
 
         app.get('/jobs', async (req, res) => {
             const email = req.query.email;
