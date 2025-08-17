@@ -9,6 +9,16 @@
  * 
  * 3. for sensitive or secure or private or protected apis: send token to the server side
  * 
+ * on the server side
+ * app.use(cors({
+     origin: ['http://localhost:5173'],
+     credentials: true
+ 
+     }));
+ *
+ * In client side 
+ * 
+ * 
  * 4. validate the token in the server
  * if valid: provide data
  * if not valid: logout

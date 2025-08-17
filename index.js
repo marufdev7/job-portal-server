@@ -8,7 +8,10 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 
 //middleware
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:5173'],
+    credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -77,6 +80,8 @@ async function run() {
             const email = req.query.email;
             const query = { applicant_email: email };
             const result = await jobApplicationCollection.find(query).toArray();
+
+            // console.log('cookies', req.cookies);
 
             //not proper and good way.
 
