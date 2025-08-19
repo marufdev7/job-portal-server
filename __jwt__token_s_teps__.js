@@ -16,8 +16,13 @@
  
      }));
  *
- * In client side 
- * 
+ * In client side: 
+ * use axios get, post, delete, patch for secure apis and must use {withCredentials: true}
+ * example: 
+ * axios.post('http://localhost:3000/jwt', user, {withCredentials: true})
+    .then(res => {
+        console.log(res );
+    })
  * 
  * 4. validate the token in the server
  * if valid: provide data
