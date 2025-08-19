@@ -26,11 +26,12 @@ const verifyToken = (req, res, next) => {
     if (!token) {
         return res.status(401).send({ message: 'Unauthorized Access' });
     }
+
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
             return res.status(401).send({ message: 'Unauthorized Access' });
         }
-
+        req.user = decoded;
         next();
     });
 
@@ -100,9 +101,13 @@ async function run() {
         app.get('/job-applications', verifyToken, async (req, res) => {
             const email = req.query.email;
             const query = { applicant_email: email };
-            const result = await jobApplicationCollection.find(query).toArray();
 
+            if (req.user.email !== email) {
+                return res.status(403).send({message: 'Forbidden access'})
+            }
             // console.log('cookies', req.cookies);
+
+            const result = await jobApplicationCollection.find(query).toArray();
 
             //not proper and good way.
 
