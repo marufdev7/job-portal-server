@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 const logger = (req, res, next) => {
-    console.log('inside the logger');
+    // console.log('inside the logger');
     next();
 };
 
@@ -67,9 +67,18 @@ async function run() {
             res.cookie('token', token, {
                 httpOnly: true,
                 secure: false, //http://localhost:5173/signin
-            }).send({ success: true })
+            })
+                .send({ success: true })
             // res.send(token);
-        })
+        });
+
+        app.post('/logout', async (req, res) => {
+            res.clearCookie('token', token, {
+                httpOnly: true,
+                secure: false,
+            })
+                .send({ success: true })
+        });
 
         app.get('/jobs', logger, async (req, res) => {
             const email = req.query.email;
@@ -103,7 +112,7 @@ async function run() {
             const query = { applicant_email: email };
 
             if (req.user.email !== email) {
-                return res.status(403).send({message: 'Forbidden access'})
+                return res.status(403).send({ message: 'Forbidden access' })
             }
             // console.log('cookies', req.cookies);
 
