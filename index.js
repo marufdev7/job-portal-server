@@ -9,7 +9,11 @@ require('dotenv').config();
 
 //middleware
 app.use(cors({
-    origin: ['http://localhost:5173'],
+    origin: [
+        'http://localhost:5173',
+        'https://job-portal-c4aa6.web.app',
+        'https://job-portal-c4aa6.firebaseapp.com'
+    ],
     credentials: true
 }));
 app.use(express.json());
@@ -51,10 +55,11 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        // await client.connect();
         // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB!");
+        // await client.db("admin").command({ ping: 1 });
+        // console.log("Pinged your deployment. You successfully connected to MongoDB!");
+
 
         //jobs related APIS
         const jobsCollection = client.db('jobPortal').collection('jobs');
@@ -66,7 +71,9 @@ async function run() {
             const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '2h' });
             res.cookie('token', token, {
                 httpOnly: true,
-                secure: false, //http://localhost:5173/signin
+                // secure: false, //http://localhost:5173/signin
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
             })
                 .send({ success: true })
             // res.send(token);
@@ -75,7 +82,9 @@ async function run() {
         app.post('/logout', async (req, res) => {
             res.clearCookie('token', {
                 httpOnly: true,
-                secure: false,
+                // secure: false,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
             })
                 .send({ success: true })
         });

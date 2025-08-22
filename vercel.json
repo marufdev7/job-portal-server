@@ -14,7 +14,8 @@
                 "POST",
                 "PATCH",
                 "PUT",
-                "DELETE"
+                "DELETE",
+                "OPTIONS"
             ],
             "dest": "index.js"
         }
