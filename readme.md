@@ -75,9 +75,6 @@ Server will run at: `http://localhost:3000`
 - `PUT /jobs/:id` — Update job details (protected)  
 - `DELETE /jobs/:id` — Delete job (protected)  
 
-### Users
-- `GET /users` — Get all users (admin only)  
-- `POST /users` — Register new user  
 
 ---
 
